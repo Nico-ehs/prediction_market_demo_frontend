@@ -1,25 +1,36 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
+import Navbar from 'react-bootstrap/lib/Navbar'
+import Nav from 'react-bootstrap/lib/Nav'
+import NavItem from 'react-bootstrap/lib/NavItem'
+import NavDropdown from 'react-bootstrap/lib/NavDropdown'
 
+
+import NavContainer from './containers/NavContainer';
+import EventList from './containers/EventList';
 class App extends Component {
+
+  state = {
+    events: [1,2],
+    user: null
+  }
+
+  // componentDidMount() {
+    // fetch('http://api.open-notify.org/astros.json')
+    //   .then(response => response.json())
+    //   .then(({people}) => this.setState({ peopleArr: people }))
+  // }
+
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+
+
+
+      <NavContainer />
+      <EventList events={this.state.events} />
       </div>
     );
   }
