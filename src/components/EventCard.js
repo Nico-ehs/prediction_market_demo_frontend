@@ -7,25 +7,34 @@ import FormControl from 'react-bootstrap/lib/FormControl'
 
 class EventCard extends React.Component {
 
+
+  getCurrentBets = () => {
+    if (!this.props.user){
+      return 1
+    }
+    return 0
+  }
+
   componentDidMount() {
     // console.log(this.props)
   }
 
   genOutcomes = () => {
     // return <div></div>
+    if (!this.props.user){
+      return this.props.eventData.outcomes.map(outcome =>
+        <div key={outcome.id}>
+        <h4>{outcome.name} {outcome.prediction_value}</h4>
+      </div>)
+    }
     return this.props.eventData.outcomes.map(outcome =>
       <div key={outcome.id}>
-      <h4>{outcome.prediction_value}</h4>
-      <Form inline onSubmit={(event) => this.props.outcomeButtonClick(event)} >
+      <h4>{outcome.name} {outcome.prediction_value}</h4>
+      <Form inline onSubmit={(event) => this.props.placeBet(event)} >
       <FormControl type="text" defaultValue="100" />
       <Button variant="outline-success" type="submit">PlaceBet</Button>
     </Form>
     </div>)
-    // return this.props.eventData.outcomes.map(outcome =>
-    //   <div key={outcome.id}><h4>{outcome.prediction_value}</h4>
-    //   <Button onClick={this.props.outcomeButtonClick} variant="primary">{outcome.name}
-    //   </Button>
-    //   </div>)
   }
 
   render(){

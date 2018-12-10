@@ -1,14 +1,8 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
 import './App.css';
-// import Navbar from 'react-bootstrap/lib/Navbar'
-// import Nav from 'react-bootstrap/lib/Nav'
-// import NavItem from 'react-bootstrap/lib/NavItem'
-// import NavDropdown from 'react-bootstrap/lib/NavDropdown'
-
-
 import NavContainer from './containers/NavContainer';
 import EventList from './containers/EventList';
+
 
 
 const BackendUrl = "http://localhost:3000/"
@@ -16,69 +10,73 @@ const BackendUrl = "http://localhost:3000/"
 // function getBackendData(route, confirmFn){
 //     return fetch(backendUrl+route).then(res => res.json()).then(json => confirmFn(json));
 // }
-//
-//
-// function postBackendData(route, data, confirmFn){
-//     return fetch(backendUrl+route,{
-//         method: "POST",
-//         headers: {
-//         "Content-Type": "application/json",
-//         Accept: "application/json"
-//         },
-//         body: data
-//     }).then(res => res.json()).then(json => confirmFn(json));
-// }
 
+function postBackendData(route, data, confirmFn){
+    return fetch(BackendUrl+route,{
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+        },
+        body: data
+    }).then(res => res.json()).then(json => confirmFn(json));
+}
 
 class App extends Component {
 
   state = {
     user: null,
     events: [],
-    // events1: [{"id":1,"title":"Election","description":"d1","outcomes":[{"id":1,"name":"A wins","prediction_value":65},{"id":2,"name":"B wins","prediction_value":35},{"id":5,"name":"Draw","prediction_value":10}]},{"id":2,"title":"Sportsball Game","description":"d2","outcomes":[{"id":3,"name":"C wins","prediction_value":50},{"id":4,"name":"D wins","prediction_value":40}]}]
+    message: "",
   }
-
   componentDidMount() {
     fetch(BackendUrl+"/events")
       .then(response => response.json())
       .then((res) => this.setState({ events: res }))
   }
 
-
-
-
   loginFn = (event) => {
-    console.log("test login")
-    console.log(event)
+    let username = event.target.parentElement.children[0].value
+    event.preventDefault()
+    postBackendData("users", JSON.stringify({"user": {"name": username}}), this.setUser)
+  }
+
+  setUser = (user) => {
+
+    this.setState({ user })
+    console.log(this.state)
   }
 
   logoutFn = () => {
     console.log("test logout")
+    this.setUser(null)
   }
 
-  placeBet = () => {
+  placeBet = (event) => {
+    event.preventDefault()
+    let amount = event.target.children[0].value*1
+    let user_id = this.state.user.id
+    let outcome_id = 0
     console.log("test placeBet")
+    console.log(this.state.user)
+    // debugger
+    postBackendData("predictions", JSON.stringify({"prediction": {amount, outcome_id, user_id}}), this.confirmBet)
   }
 
-  // getUserData = () => {
-  //   postBackendData(route, data, confirmFn)
-  // }
-
-  outcomeButtonClick = (event) => {
-    debugger
-    console.log(event);
+  confirmBet = (prediction) => {
+    this.setState({message: prediction})
+    // debugger
+    let username = this.state.user.name
+    this.setUser(this.state.user)
   }
-
 
 
   render() {
     return (
       <div className="App">
-
-
-
-      <NavContainer loginFn={this.loginFn} logoutFn={this.logoutFn} user={this.props.user}/>
-      <EventList events={this.state.events} placeBet={this.placeBet} outcomeButtonClick={this.outcomeButtonClick} />
+      <NavContainer loginFn={this.loginFn} logoutFn={this.logoutFn} user={this.state.user}/>
+      {this.state.message ? `Message: ${this.state.message.log}` : null}
+      <EventList events={this.state.events} placeBet={this.placeBet} user={this.state.user} />
       </div>
     );
   }

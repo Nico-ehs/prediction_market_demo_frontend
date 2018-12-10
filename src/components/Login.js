@@ -4,16 +4,16 @@ import FormControl from 'react-bootstrap/lib/FormControl'
 import Button from 'react-bootstrap/lib/Button'
 
 
-class Login extends React.Component {
+class LoginOut extends React.Component {
 
 
   genLoginOut = () => {
     if (this.props.user){
-      return 1
+      return (<Button onClick={this.props.logoutFn} variant="outline-success">LogOut</Button>)
     }
     return (<Form inline>
       <FormControl type="text" placeholder="Username" className="mr-sm-2" />
-      <Button variant="outline-success">Login</Button>
+      <Button onClick={this.props.loginFn} variant="outline-success">Login</Button>
     </Form>)
   }
 
@@ -27,4 +27,4 @@ class Login extends React.Component {
 
 };
 
-export default Login;
+export default LoginOut;

@@ -14,7 +14,7 @@ class EventList extends React.Component {
     if (!this.props.events){
       return 1
     }
-    return this.props.events.map(event => <EventCard eventData={event} key={event.id} outcomeButtonClick={this.props.outcomeButtonClick} />)
+    return this.props.events.map(event => <EventCard eventData={event} user={this.props.user} key={event.id} placeBet={this.props.placeBet} />)
   }
 
   render(){
